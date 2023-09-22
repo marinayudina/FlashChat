@@ -29,7 +29,11 @@ class ChatVC: UIViewController {
     
     private lazy var messageTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "  Write a message..."
+//        textField.placeholder = "  Write a message..."
+        textField.attributedPlaceholder = NSAttributedString(
+            string: "  Write a message...",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.black]
+        )
         textField.font = .systemFont(ofSize: 15)
         textField.backgroundColor = .white
         textField.layer.cornerRadius = 10

@@ -71,6 +71,10 @@ class LogInVC: UIViewController {
         view.backgroundColor = .systemCyan
         setupView()
         setConstraints()
+        
+        navigationItem.backButtonTitle = ""
+
+
     }
     private func   setupView() {
         view.addSubview(emailTextField)

@@ -5,8 +5,8 @@
 //  Created by Марина on 17.09.2023.
 //
 
-import Foundation
 import UIKit
+import FirebaseAuth
 
 class RegisterVC: UIViewController {
     
@@ -42,7 +42,7 @@ class RegisterVC: UIViewController {
         button.tintColor = UIColor(named: "BrandBlue")
         button.backgroundColor = .clear
         button.titleLabel?.font = .systemFont(ofSize: 30)
-        button.addTarget(self, action: #selector(logButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -54,7 +54,7 @@ class RegisterVC: UIViewController {
         setupView()
         setConstraints()
         
-//        navigationController.but
+        navigationItem.backButtonTitle = ""
     }
     private func   setupView() {
         view.addSubview(emailTextField)
@@ -63,9 +63,22 @@ class RegisterVC: UIViewController {
         view.addSubview(registerButton)
     }
     
-    @objc private func logButtonTapped(_ sender: UIButton) {
+    @objc private func registerButtonTapped(_ sender: UIButton) {
         let chatVC = ChatVC()
         navigationController?.pushViewController(chatVC, animated: true)
+        
+        if let email = emailTextField.text,
+           let password = passwordTextField.text {
+            Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+                if let e = error {
+                    print(e)
+                } else {
+                    
+                }
+            }
+        }
+        
+      
     }
 }
 

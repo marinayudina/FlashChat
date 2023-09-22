@@ -6,11 +6,12 @@
 //
 
 import UIKit
+import CLTypingLabel
 
 class WelcomeViewController: UIViewController {
 
-    private let nameLabel: UILabel = {
-        let label = UILabel()
+    private let nameLabel: CLTypingLabel! = {
+        let label = CLTypingLabel()
         label.text = "⚡️FlashChat"
         label.textColor = UIColor(named: "BrandBlue")
         label.font = .systemFont(ofSize: 50)
@@ -44,16 +45,32 @@ class WelcomeViewController: UIViewController {
         
         setupView()
         setConstraints()
+        
+        navigationItem.backButtonTitle = ""
+        navigationController?.navigationBar.tintColor = .black
+        
+//        nameLabel.text = ""
+//        let titleText = "⚡️FlashChat"
+//        var charIndex = 0.0
+//        for letter in titleText {
+//            Timer.scheduledTimer(withTimeInterval: 0.1 * charIndex, repeats: false) { timer in
+//                self.nameLabel.text?.append(letter)
+//            }
+//           charIndex += 1
+//        }
     }
+    
     private func setupView() {
         view.addSubview(nameLabel)
         view.addSubview(logButton)
         view.addSubview(registerButton)
     }
+    
     @objc private func registerButtonTapped() {
         let registerVC = RegisterVC()
         navigationController?.pushViewController(registerVC, animated: true)
     }
+    
     @objc private func logButtonTapped() {
         let logInVC = LogInVC()
         navigationController?.pushViewController(logInVC, animated: true)
