@@ -6,14 +6,10 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class LogInVC: UIViewController {
 
-//    private let emailView: UIView = {
-//        let view = UIView()
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        return view
-//    }()
     private lazy var emailTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Email"
@@ -22,17 +18,10 @@ class LogInVC: UIViewController {
         textField.layer.cornerRadius = 10
         textField.textAlignment = .center
         textField.clipsToBounds = true
+        textField.text = "0518204@mail.ru"
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
-//    private let emailView: UIImageView = {
-//        let imageView = UIImageView(image: UIImage(named: "textfield"))
-//        imageView.backgroundColor = .black
-//        imageView.contentMode = .scaleAspectFill
-//        imageView.clipsToBounds = true
-//        imageView.translatesAutoresizingMaskIntoConstraints = false
-//        return imageView
-//    }()
     
     private lazy var passwordTextField: UITextField = {
         let textField = UITextField()
@@ -41,18 +30,13 @@ class LogInVC: UIViewController {
         textField.backgroundColor = .white
         textField.layer.cornerRadius = 10
         textField.textAlignment = .center
+        textField.text = "mari22"
         textField.clipsToBounds = true
+        textField.isSecureTextEntry = true
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
     
-//    private let passwordView: UIImageView = {
-//        let imageView = UIImageView(image: UIImage(named: "textfield"))
-////        imageView.contentMode = .scaleAspectFill
-//        imageView.backgroundColor = .black
-//        imageView.translatesAutoresizingMaskIntoConstraints = false
-//        return imageView
-//    }()
     
     private lazy var logButton: UIButton = {
         let button = UIButton(type: .system)
@@ -83,9 +67,46 @@ class LogInVC: UIViewController {
         view.addSubview(logButton)
     }
     
+    private func showAlert(_ e: String) {
+        let alert = UIAlertController(title: e, message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in
+        NSLog("The \"OK\" alert occured.")
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
     @objc private func logButtonTapped(_ sender: UIButton) {
-        let chatVC = ChatVC()
-        navigationController?.pushViewController(chatVC, animated: true)
+
+        if let email = emailTextField.text,
+           let password = passwordTextField.text {
+            Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
+                guard let self = self else { return }
+                if let error = error {
+                    print(error.localizedDescription)
+                    if let error = error as NSError? {
+                        if let authError = AuthErrorCode.Code(rawValue: error.code) {
+                            switch authError {
+                            case .invalidEmail:
+                                self.showAlert("Email is invalid.")
+                            case .operationNotAllowed:
+                                self.showAlert("not allowed")
+                            case .userDisabled:
+                                self.showAlert("User's account is disabled.")
+                            case .userNotFound:
+                                self.showAlert("User's account was not found.")
+                            case .wrongPassword:
+                                self.showAlert("Wrong password. Try again")
+                            default:
+                                self.showAlert("An unknowm error")
+                            }
+                        }
+                    }
+                } else {
+                    let chatVC = ChatVC()
+                    self.navigationController?.pushViewController(chatVC, animated: true)
+                }
+            }
+        }
+
     }
 }
 

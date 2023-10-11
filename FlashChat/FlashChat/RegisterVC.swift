@@ -30,6 +30,7 @@ class RegisterVC: UIViewController {
         textField.layer.cornerRadius = 10
         textField.textAlignment = .center
         textField.clipsToBounds = true
+        textField.isSecureTextEntry = true
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -47,6 +48,10 @@ class RegisterVC: UIViewController {
         return button
     }()
 
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//        emailTextField.becomeFirstResponder()
+//    }
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -60,20 +65,43 @@ class RegisterVC: UIViewController {
         view.addSubview(emailTextField)
         
         view.addSubview(passwordTextField)
+        passwordTextField.textContentType = .oneTimeCode
+        passwordTextField.autocorrectionType = .no
         view.addSubview(registerButton)
+        emailTextField.becomeFirstResponder()
     }
-    
+    private func showAlert(_ e: String) {
+        let alert = UIAlertController(title: e, message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in
+        NSLog("The \"OK\" alert occured.")
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
     @objc private func registerButtonTapped(_ sender: UIButton) {
-        let chatVC = ChatVC()
-        navigationController?.pushViewController(chatVC, animated: true)
-        
+        view.endEditing(true)
         if let email = emailTextField.text,
            let password = passwordTextField.text {
-            Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
-                if let e = error {
-                    print(e)
-                } else {
+            Auth.auth().createUser(withEmail: email, password: password) { [ weak self] authResult, error in
+                guard let self = self else { return }
+                if let error = error {
+                    if let error = error as NSError? {
+                        if let authError = AuthErrorCode.Code(rawValue: error.code) {
+                            switch authError {
+                            case .invalidEmail:
+                                self.showAlert("Email is invalid.")
+                            case .emailAlreadyInUse:
+                                self.showAlert("Email used to attempt sign up already exists")
+                            case .weakPassword:
+                                self.showAlert(error.userInfo[NSLocalizedFailureReasonErrorKey] as! String)
+                            default:
+                                self.showAlert("An unknowm error")
+                            }
+                        }
+                    }
                     
+                } else {
+                    let chatVC = ChatVC()
+                    self.navigationController?.pushViewController(chatVC, animated: true)
                 }
             }
         }
