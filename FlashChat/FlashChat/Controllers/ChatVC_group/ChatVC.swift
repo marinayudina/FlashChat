@@ -29,10 +29,7 @@ class ChatVC: UIViewController {
         let button = UIButton(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.tintColor = .white
-//        button.backgroundColor = .red
-//        button.contentMode = .scaleAspectFit
         button.addTarget(self, action: #selector(sendButtonPressed), for: .touchUpInside)
-//        button.setBackgroundImage(UIImage(systemName: "paperplane.fill"), for: .normal)
         let imageP = UIImage(systemName: "paperplane.fill")
         button.setImage(imageP, for: .normal)
         return button
@@ -64,24 +61,23 @@ class ChatVC: UIViewController {
         return button
     }()
     
-    override func viewWillAppear(_ animated: Bool) {
-        navigationController?.navigationBar.backgroundColor = UIColor(named: "BrandPurple")
-//        navigationController?.navigationBar.barTintColor = UIColor(named: "BrandBlue")
-        navigationController?.navigationBar.isTranslucent = true
-    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = UIColor(named: "BrandPurple")
-//        navigationController?.navigationBar.backgroundColor = UIColor(named: "BrandBlue")
 
 
+//        messageTextField.becomeFirstResponder()
         
         setupView()
         setConstraints()
         loadMessages()
-        
         sendButton.imageView?.contentMode = .scaleAspectFit
+        
+//        navigationController?.view.backgroundColor = UIColor(named: "BrandPurple")
+//        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+//        navigationController?.navigationBar.shadowImage = UIImage()
     }
     
     private func setupView() {
@@ -91,9 +87,9 @@ class ChatVC: UIViewController {
         view.addSubview(sendButton)
         
 
-        self.navigationItem.rightBarButtonItem  = logOutButton
-        self.navigationItem.hidesBackButton = true
-        self.title = "⚡️FlashChat"
+//        self.navigationItem.rightBarButtonItem  = logOutButton
+//        self.navigationItem.hidesBackButton = true
+//        self.title = "⚡️FlashChat"
         
         
     }
@@ -118,9 +114,10 @@ class ChatVC: UIViewController {
                             
                             DispatchQueue.main.async {
                                 self.chatTableView.reloadData()
-                                
+                                print("reload")
                                 let indexPath = IndexPath(row: self.messages.count - 1, section: 0)
                                 self.chatTableView.scrollToRow(at: indexPath, at: .top, animated: true)
+                                print("scroll")
                             }
                         }
                         
@@ -168,18 +165,20 @@ extension ChatVC {
         NSLayoutConstraint.activate([
             chatTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             chatTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            chatTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -35),
+            chatTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
             chatTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            messageTextField.topAnchor.constraint(equalTo: chatTableView.bottomAnchor, constant: 10),
+//            messageTextField.topAnchor.constraint(equalTo: chatTableView.bottomAnchor, constant: 12),
+            messageTextField.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -3),
             messageTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
             messageTextField.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.04),
             
             sendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             sendButton.leadingAnchor.constraint(equalTo: messageTextField.trailingAnchor, constant: 20),
-            sendButton.topAnchor.constraint(equalTo: chatTableView.bottomAnchor, constant: 10),
+//            sendButton.topAnchor.constraint(equalTo: chatTableView.bottomAnchor, constant: 15),
             sendButton.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.04),
             sendButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.1),
+            sendButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -3),
 
             
             sendButton.centerYAnchor.constraint(equalTo: messageTextField.centerYAnchor)
@@ -230,3 +229,11 @@ extension ChatVC: UITableViewDataSource {
     
     
 }
+
+//extension ChatVC {
+//    func setNavBar() {
+//        let appearance = UINavigationBarAppearance()
+//        appearance.backgroundColor = UIColor(named: "BrandPurple")
+//       navigationController?.navigationBar.scrollEdgeAppearance = appearance
+//    }
+//}

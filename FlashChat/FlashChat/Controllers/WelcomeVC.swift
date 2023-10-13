@@ -10,6 +10,7 @@ import CLTypingLabel
 
 class WelcomeViewController: UIViewController {
 
+    
     private let nameLabel: CLTypingLabel! = {
         let label = CLTypingLabel()
         label.text = "⚡️FlashChat"
@@ -49,6 +50,8 @@ class WelcomeViewController: UIViewController {
         navigationItem.backButtonTitle = ""
         navigationController?.navigationBar.tintColor = .black
         
+        
+        
 //        nameLabel.text = ""
 //        let titleText = "⚡️FlashChat"
 //        var charIndex = 0.0
@@ -84,7 +87,7 @@ extension WelcomeViewController {
             
             logButton.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             logButton.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            logButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10),
+            logButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             logButton.heightAnchor.constraint(equalToConstant: 50),
             
             registerButton.bottomAnchor.constraint(equalTo: logButton.topAnchor, constant: -10),

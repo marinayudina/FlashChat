@@ -10,6 +10,13 @@ import FirebaseAuth
 
 class RegisterVC: UIViewController {
     
+//    private let userImage: UIImageView = {
+//        let imageView = UIImageView()
+//        imageView.image = UIImage(named: <#T##String#>)
+//        imageView.contentMode = .scaleAspectFit
+//        return imageView
+//    }()
+    
     private lazy var emailTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Email"
@@ -81,6 +88,10 @@ class RegisterVC: UIViewController {
         view.endEditing(true)
         if let email = emailTextField.text,
            let password = passwordTextField.text {
+            if email.isEmpty == true {
+                showAlert("Fill email field")
+                return
+            }
             Auth.auth().createUser(withEmail: email, password: password) { [ weak self] authResult, error in
                 guard let self = self else { return }
                 if let error = error {
